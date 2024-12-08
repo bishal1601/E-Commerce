@@ -1,0 +1,63 @@
+﻿<style>
+    .notification-box {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 1050; /* Ensure it appears above other elements */
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-size: 14px;
+        color: #fff;
+        background-color: #28a745; /* Green for success */
+        transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    }
+
+    .notification-box.alert-danger {
+        background-color: #dc3545; /* Red for error */
+    }
+
+    .notification-box span {
+        font-size: 16px;
+    }
+
+    .notification-box.hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+</style>
+
+@if (TempData["Success"] != null)
+{
+    <div id="successMessage" class="notification-box alert-success">
+        <span>✔</span> @TempData["Success"]
+    </div>
+}
+
+@if (TempData["error"] != null)
+{
+    <div id="errorMessage" class="notification-box alert-danger">
+        <span>⚠</span> @TempData["error"]
+    </div>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+            var successMessage = document.getElementById("successMessage");
+            if (successMessage) {
+                successMessage.classList.add("hidden");
+            }
+
+            var errorMessage = document.getElementById("errorMessage");
+            if (errorMessage) {
+                errorMessage.classList.add("hidden");
+            }
+        }, 3000); // Hide after 3 seconds
+    });
+
+</script>
