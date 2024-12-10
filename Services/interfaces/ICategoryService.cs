@@ -6,6 +6,6 @@ namespace E_Commerce.Services.interfaces;
 public interface ICategoryService
 {
     Task<Category> Create(CategoryDto dto);
-    Task UpdateCategory(CategoryDto dto);
-    Task DeleteCategory(long id);
+    Task Update(CategoryDto dto);
+    Task Delete(long id);
 }

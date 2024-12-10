@@ -28,6 +28,7 @@
       <Folder Include="Dto\Review\" />
       <Folder Include="Dto\Shipping\" />
       <Folder Include="Dto\User\" />
+      <Folder Include="wwwroot\productimages\" />
     </ItemGroup>
 
 </Project>

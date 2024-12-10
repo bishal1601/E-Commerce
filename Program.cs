@@ -18,6 +18,9 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 builder.Services.AddScoped<IVendorService, VendorService>();
 
+builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

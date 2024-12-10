@@ -62,6 +62,11 @@
                                 </button>
                                 <ul class="dropdown-menu" style="min-width: auto; width: 100%; padding: 0; margin: 0;">
                                     <li>
+                                        <a class="dropdown-item" asp-controller="Product" asp-action="Details" asp-route-id="@item.Id">
+                                            <i class="bi bi-pencil-square"></i> Details
+                                        </a>
+                                    </li>
+                                    <li>
                                         <a class="dropdown-item" asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id">
                                             <i class="bi bi-pencil-square"></i> Edit
                                         </a>

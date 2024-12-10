@@ -1,0 +1,134 @@
+﻿@model E_Commerce.Models.Product.ProductDetailVm
+
+@{
+    ViewBag.Title = "Product Detail View";
+    Layout = "_Layout";
+}
+
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0 text-center">@ViewBag.Title</h2>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Name:</div>
+                <div class="col-md-8 text-secondary">@Model.Name</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Price:</div>
+                <div class="col-md-8 text-secondary">₹@Model.Price.ToString("F2")</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Stock:</div>
+                <div class="col-md-8 text-secondary">@Model.Stock</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Category:</div>
+                <div class="col-md-8 text-secondary">@Model.CategoryName</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Vendor:</div>
+                <div class="col-md-8 text-secondary">@Model.VendorName</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Created On:</div>
+                <div class="col-md-8 text-secondary">@Model.CreatedAt.ToString("MMMM dd, yyyy hh:mm tt")</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Updated On:</div>
+                <div class="col-md-8 text-secondary">@Model.UpdatedAt.ToString("MMMM dd, yyyy hh:mm tt")</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Status:</div>
+                <div class="col-md-8">
+                    @if (Model.Status)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Inactive</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <form asp-controller="Image" asp-action="Add" method="post" asp-route-id="@Model.Id" enctype="multipart/form-data">
+                <div class="row align-items-center g-3">
+                    <div class="col-md-2">
+                        <label for="image" class="form-label fw-bold">Add Image</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="file" name="image" id="image" class="form-control" accept="image/*" required=""/>
+                    </div>
+                    <div class="col-md-1 text-end">
+                        <button type="submit" class="btn btn-success px-4">Upload</button>
+                    </div>
+                </div>
+            </form>
+            <hr />
+            <div class="container py-5">
+                <div class="row mb-4">
+                    <div class="col-12 text-center">
+                        <h2 class="fw-bold text-primary">Product Images</h2>
+                        <p class="text-muted">Browse the collection of product images below.</p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    @foreach (var image in Model.ProductImageUrl)
+                    {
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card shadow-sm border-0 position-relative" style="overflow: hidden;">
+                                <!-- Close Button -->
+                                <button type="button"
+                                        class="close-btn position-absolute bg-danger text-white"
+                                        aria-label="Close"
+                                        title="Remove Image">
+                                    &times;
+                                </button>
+
+                                <!-- Image -->
+                                <div class="card-img-container position-relative overflow-hidden">
+                                    <img src="@image.ImageUrl" alt="Product Image" class="card-img-top img-fluid" style="height: 200px; object-fit: cover; border-radius: 8px;" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+
+
+            <div class="d-flex justify-content-end">
+                <a asp-action="Index" class="btn btn-secondary px-4">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .close-btn {
+        top: -10px;
+        right: -10px;
+        width: 40px;
+        height: 40px;
+        border: none;
+        z-index: 10;
+        font-size: 1.2rem;
+        border-radius: 50%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: none; /* Hide by default */
+    }
+
+    .card:hover .close-btn {
+        display: block; /* Show when card is hovered */
+    }
+
+    .close-btn:hover {
+        cursor: pointer;
+        transform: scale(1.1); /* Slightly enlarge on hover */
+        transition: transform 0.2s ease-in-out;
+    }
+</style>

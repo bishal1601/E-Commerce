@@ -29,7 +29,7 @@ public class CategoryService : ICategoryService
         return category;
     }
 
-    public async Task UpdateCategory(CategoryDto dto)
+    public async Task Update(CategoryDto dto)
     {
         var category = await _context.Categories.FindAsync(dto.Id);
         if (category == null)
@@ -42,7 +42,7 @@ public class CategoryService : ICategoryService
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteCategory(long id)
+    public async Task Delete(long id)
     {
         var hasProduct = await _context.Products.AnyAsync(p => p.CategoryId == id);
         if (hasProduct)

@@ -19,5 +19,6 @@ public class ApplicationDbContext: DbContext
     public DbSet<Shipping> Shipping { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<Vendor> Vendors { get; set; }
+    public DbSet<ProductImage> ProductImages { get; set; }
     
 }

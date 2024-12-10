@@ -87,7 +87,7 @@ public class CategoryController : Controller
         };
         try
         {
-            await _categoryService.UpdateCategory(dto);
+            await _categoryService.Update(dto);
             TempData["Success"] = "Category Updated successfully";
             return RedirectToAction("Index");
         }
@@ -102,7 +102,7 @@ public class CategoryController : Controller
     {
         try
         {
-            await _categoryService.DeleteCategory(id);
+            await _categoryService.Delete(id);
             TempData["Success"] = "Category deleted successfully.";
         }
         catch (Exception e)

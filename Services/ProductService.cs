@@ -16,7 +16,7 @@ public class ProductService: IProductService
         _context = context;
     }
     //Create product 
-    public async  Task Create(ProductDto dto)
+    public async  Task<Product> Create(ProductDto dto)
     {
         var product = new Product()//entity
         {
@@ -29,8 +29,10 @@ public class ProductService: IProductService
             Status = dto.Status,
         };
         product.CreatedAt = DateTime.Now.ToUniversalTime();
+        product.UpdatedAt = DateTime.Now.ToUniversalTime();
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
+        return product;
 
     }
     //Edit Product

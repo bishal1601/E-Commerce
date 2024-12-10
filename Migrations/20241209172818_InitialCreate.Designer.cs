@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace E_Commerce.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241205025006_InitialCreate")]
+    [Migration("20241209172818_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -206,6 +206,31 @@ namespace E_Commerce.Migrations
                     b.HasIndex("VendorId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("E_Commerce.Entities.ProductImage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("E_Commerce.Entities.Review", b =>
@@ -431,6 +456,17 @@ namespace E_Commerce.Migrations
                     b.Navigation("Vendor");
                 });
 
+            modelBuilder.Entity("E_Commerce.Entities.ProductImage", b =>
+                {
+                    b.HasOne("E_Commerce.Entities.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("E_Commerce.Entities.Review", b =>
                 {
                     b.HasOne("E_Commerce.Entities.Product", "Product")
@@ -480,6 +516,8 @@ namespace E_Commerce.Migrations
             modelBuilder.Entity("E_Commerce.Entities.Product", b =>
                 {
                     b.Navigation("OrderItems");
+
+                    b.Navigation("ProductImages");
 
                     b.Navigation("Reviews");
                 });

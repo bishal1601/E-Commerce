@@ -16,24 +16,27 @@ public class ProductController : Controller
     private readonly IProductRepository _productRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly IVendorRepository _vendorRepository;
+    private readonly IImageRepository _imageRepository;
 
     public ProductController(
         IProductService productService,
         IProductRepository productRepository,
         ICategoryRepository categoryRepository,
-        IVendorRepository vendorRepository
+        IVendorRepository vendorRepository,
+        IImageRepository imageRepository
     )
     {
         _productService = productService;
         _productRepository = productRepository;
         _categoryRepository = categoryRepository;
         _vendorRepository = vendorRepository;
+        _imageRepository = imageRepository;
     }
-    
+
     //display all product from DB 
     public IActionResult Index()
     {
-        var products =  _productRepository.GetQueryable();
+        var products = _productRepository.GetQueryable();
         var vm = products.Select(product => new ProductListVm
         {
             Id = product.Id,
@@ -50,18 +53,17 @@ public class ProductController : Controller
 
     public async Task<IActionResult> Create()
     {
-        
-            var vm = new ProductVm();
-            vm.Categories = _categoryRepository.GetCategories();
-            vm.Vendors = _vendorRepository.GetVendors();
-            return View(vm);
+        var vm = new ProductVm();
+        vm.Categories = _categoryRepository.GetCategories();
+        vm.Vendors = _vendorRepository.GetVendors();
+        return View(vm);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(ProductVm vm)
     {
-        if(!ModelState.IsValid)return View(vm);
+        if (!ModelState.IsValid) return View(vm);
         try
         {
             var dto = new ProductDto()
@@ -74,11 +76,11 @@ public class ProductController : Controller
                 CategoryId = vm.CategoryId,
                 Status = vm.Status
             };
-            await _productService.Create(dto);
+            var product = await _productService.Create(dto);
             TempData["Success"] = "Product created";
             return RedirectToAction("Index");
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             TempData["Error"] = e.Message;
             return RedirectToAction("Index");
@@ -103,7 +105,6 @@ public class ProductController : Controller
             vm.Categories = _categoryRepository.GetCategories();
             vm.Vendors = _vendorRepository.GetVendors();
             return View(vm);
-
         }
         catch (Exception e)
         {
@@ -118,7 +119,7 @@ public class ProductController : Controller
     {
         vm.Categories = _categoryRepository.GetCategories();
         vm.Vendors = _vendorRepository.GetVendors();
-        if(!ModelState.IsValid)return View(vm);
+        if (!ModelState.IsValid) return View(vm);
         try
         {
             var dto = new ProductDto()
@@ -135,7 +136,6 @@ public class ProductController : Controller
             await _productService.Update(dto);
             TempData["Success"] = "Product updated";
             return RedirectToAction("Index");
-
         }
         catch (Exception e)
         {
@@ -158,4 +158,46 @@ public class ProductController : Controller
             return RedirectToAction("Index");
         }
     }
+
+    public async Task<IActionResult> Details(long id)
+    {
+        try
+        {
+            // Fetch product details
+            var product = _productRepository.GetQueryable()
+                .Select(product => new ProductDetailVm
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Price = product.Price,
+                    Stock = product.Stock,
+                    VendorName = product.Vendor.Name,
+                    CategoryName = product.Category.Name,
+                    Status = product.Status,
+                    UpdatedAt = product.UpdatedAt,
+                    CreatedAt = product.CreatedAt
+                })
+                .FirstOrDefault(p => p.Id == id);
+
+            if (product == null)
+            {
+                TempData["Error"] = "Product not found.";
+                return RedirectToAction("Index");
+            }
+
+            // Fetch images for the product using GetQueryable
+            product.ProductImageUrl = await _imageRepository.GetByProductId(id);
+                
+
+            return View(product);
+        }
+        catch (Exception e)
+        {
+            TempData["Error"] = e.Message;
+            return RedirectToAction("Index");
+        }
+    }
+
+
 }
